@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "NBA-Predict", "NBA-Predict\NBA-Predict.pyproj", "{0EFC4695-A7F0-46AA-8F1E-3D8C20757282}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0EFC4695-A7F0-46AA-8F1E-3D8C20757282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EFC4695-A7F0-46AA-8F1E-3D8C20757282}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {33BAEE3C-51F4-4325-8D04-550D1B79C18E}
+	EndGlobalSection
+EndGlobal
