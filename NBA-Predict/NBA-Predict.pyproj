@@ -4,14 +4,14 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>0efc4695-a7f0-46aa-8f1e-3d8c20757282</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>NBA_Predict.py</StartupFile>
+    <StartupFile>App.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>NBA-Predict</Name>
     <RootNamespace>NBA-Predict</RootNamespace>
-    <InterpreterId>MSBuild|envReqFile|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>MSBuild|env1|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,12 +23,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="availableStats.py" />
+    <Compile Include="App.py" />
     <Compile Include="configureCWD.py" />
     <Compile Include="createModel.py" />
     <Compile Include="customHeaders.py" />
     <Compile Include="getDailyMatchups.py" />
     <Compile Include="getStats.py" />
     <Compile Include="makePastPredictions.py" />
+    <Compile Include="config.cfg" />
+    <Compile Include="logger.py" />
+    <Compile Include="db_logger.log" />
     <Compile Include="NBA_Predict.py" />
     <Compile Include="standardizeStats.py" />
     <Compile Include="teamIds.py" />
@@ -42,11 +46,22 @@
     <Content Include="Data\gamesWithInfo2016-17.csv" />
     <Content Include="Data\gamesWithInfo2017-18.csv" />
     <Content Include="Data\gamesWithInfo2018-19.csv" />
+    <Content Include="Data\predictions.csv" />
     <Content Include="README.md" />
     <Content Include="requirements.txt" />
     <Content Include="SavedModels\finalized_model.pkl" />
+    <Content Include="result.csv" />
   </ItemGroup>
   <ItemGroup>
+    <Interpreter Include="env1\">
+      <Id>env1</Id>
+      <Version>3.7</Version>
+      <Description>env1 (Python 3.7 (32-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X86</Architecture>
+    </Interpreter>
     <Interpreter Include="envReqFile\">
       <Id>envReqFile</Id>
       <Version>3.7</Version>

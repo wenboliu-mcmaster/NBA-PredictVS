@@ -66,3 +66,5 @@ def dailyMatchupsPresent(date):
         homeAwayDict.update({homeTeamName:awayTeamName})
 
     return homeAwayDict
+
+#print(dailyMatchupsPresent("02-13-2022"))

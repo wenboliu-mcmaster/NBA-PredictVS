@@ -42,7 +42,7 @@ def predictDailyGames(currentDate, season, startOfSeason):
     dailyGames = dailyMatchupsPresent(currentDate)  # Gets all games for specified date
     meanDict, standardDeviationDict = createMeanStandardDeviationDicts(startOfSeason, currentDate, season)
     dailyGamesList = dailyGamesDataFrame(dailyGames, meanDict, standardDeviationDict, startOfSeason, currentDate, season)
-
+    setCurrentWorkingDirectory('SavedModels')
     # Pandas dataframe holding daily games and Z-Score differentials between teams
     gamesWithZScoreDifs = pd.DataFrame(
         dailyGamesList,
@@ -57,7 +57,10 @@ def predictDailyGames(currentDate, season, startOfSeason):
     predictions = pickleModel.predict_proba(justZScoreDifs)  # Predicts the probability that the home team loses/wins
 
     gamesWithPredictions = [dailyGames, predictions]
+    
     return gamesWithPredictions
+
+
 
 
 # Returns the percent chance that the home team will defeat the away team for each game
@@ -74,8 +77,10 @@ def interpretPredictions(gamesWithPredictions):
 
         homeTeam = list(dailyGames.keys())[gameNum]
         awayTeam = list(dailyGames.values())[gameNum]
+        
 
         print('There is a ' + winProbPercent + ' chance that the ' + homeTeam + ' will defeat the ' + awayTeam + '.')
+       
 
 
 # Fetches games on set date and returns predictions for each game
@@ -92,5 +97,5 @@ def makeInterpretPredictions(currentDate, season, startOfSeason):
 
 # EDIT THIS
 # First arg is date to predict (mm/dd/yyyy), second is season (yyyy-yy), and third is start date of season (mm/dd/yyyy)
-makeInterpretPredictions('01/18/2022', '2021-22', '10/19/2021')
+#print(makeInterpretPredictions('02/12/2022', '2021-22', '10/19/2021'))
 

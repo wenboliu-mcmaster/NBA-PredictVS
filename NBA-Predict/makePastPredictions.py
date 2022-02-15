@@ -11,7 +11,7 @@ from configureCWD import setCurrentWorkingDirectory
 # End date will not be included in range
 # season must be in form 'yyyy-yy' and startDateOfSeason must be in form 'mm/dd/yyyy'
 # filename must end in '.csv'
-def getTrainingSetCSV(startYear, startMonth, startDay, endYear, endMonth, endDay, season, startDateOfSeason, filename='gamesWithInfo.csv'):
+def getTrainingSetCSV(startYear, startMonth, startDay, endYear, endMonth, endDay, season, startDateOfSeason, filename='gamesWithInfo2017-18.csv'):
 
     # Gets date, teams, and z-score difs for every game within range
     rangeOfGames = getTrainingSet(startYear, startMonth, startDay, endYear, endMonth, endDay, season, startDateOfSeason)
@@ -25,6 +25,7 @@ def getTrainingSetCSV(startYear, startMonth, startDay, endYear, endMonth, endDay
 # Creates a csv file that gives predictions for range of games
 # Prints accuracy of model in predicting games for specified range
 # gameDataFilename and outputFilename must be '.csv' files
+
 def getPredictionsCSV(gameDataFilename, outputFilename):
 
     setCurrentWorkingDirectory('Data')

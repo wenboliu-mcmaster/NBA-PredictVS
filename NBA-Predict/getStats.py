@@ -8,6 +8,7 @@ from customHeaders import customHeaders
 # Returns various stats for inputted team in a dictionary
 # team should match team name in teamIds.py
 # startDate and endDate should be in format 'mm/dd/yyyy'
+
 def getStatsForTeam(team, startDate, endDate, season='2019-20'):
 
     time.sleep(1)
@@ -44,3 +45,4 @@ def getStatsForTeam(team, startDate, endDate, season='2019-20'):
     }
 
     return allStats
+#print(getStatsForTeam("Toronto Raptors",'01/01/2019','11/11/2020',season='2019-20'))
