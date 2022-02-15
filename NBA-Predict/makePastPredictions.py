@@ -93,6 +93,6 @@ def makePastPredictions(startYear, startMonth, startDay, endYear, endMonth, endD
 # season(yyyy-yy), start date of season (mm/dd/yyyy), .csv filename for games with z score differences,
 # .csv filename for games with predictions
 # EDIT THIS
-makePastPredictions(2018, 12, 28, 2019, 1, 13, '2018-19', '10/16/2018',
+#makePastPredictions(2018, 12, 28, 2019, 1, 13, '2018-19', '10/16/2018',
                     'gamesWithInfo.csv', 'predictions.csv')
 

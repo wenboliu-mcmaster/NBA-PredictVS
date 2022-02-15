@@ -67,4 +67,3 @@ def dailyMatchupsPresent(date):
 
     return homeAwayDict
 
-#print(dailyMatchupsPresent("02-13-2022"))
