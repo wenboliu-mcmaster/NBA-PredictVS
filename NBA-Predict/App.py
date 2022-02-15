@@ -50,13 +50,13 @@ class App(object):
         for k,v in db_dailymatchups_results[0].items():
             homeTeam.append(k) 
             awayTeam.append(v)
-        #print(f"{homeTeam}=>{awayTeam}")
+        
   
         for i in range ( len(homeTeam)):
             print(homeTeam[i]+awayTeam[i]+str(winpercentage[i]))
             with open('result.csv', 'w') as file: 
                 file.write(homeTeam[i]+","+awayTeam[i]+","+str(winpercentage[i]))
-                file.write("hello")
+            file.write("added on date"+" "+currentdate)
 
 
 App().daily_prediction_entry()
