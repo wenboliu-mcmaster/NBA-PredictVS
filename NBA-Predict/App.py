@@ -19,10 +19,10 @@ class App(object):
         self.currentdate = today.strftime("%m/%d/%y")
                 
         self.mydb = mysql.connector.connect(
-            host = "bxpjbhq1hfealtjgr476-mysql.services.clever-cloud.com",
-            user="u0wsinrzbzwfyhsq",
-            passwd="AgrGxTm7lc2Zn4TvXk0d",
-            database="bxpjbhq1hfealtjgr476"
+            host = "b34wwyzhk6qwzgerwfb0-mysql.services.clever-cloud.com",
+            user="uojlwsohujiqmbo1",
+            passwd="db8jXOpiyuTYrlLryjHS",
+            database="b34wwyzhk6qwzgerwfb0"
             )
     def _sql_Select_query(self,stm,data):
         
@@ -35,26 +35,28 @@ class App(object):
         for x in myresult:
             #print(x)
              return x
-    def sql_insert_query(self):
+    def _sql_insert_query(self):
         
         mycursor = self.mydb.cursor()
         stm="INSERT INTO `Team`(`TeamId`,`SportLeagueId`, `TeamName`, `City`, `AssetPath`) ""VALUES (%s,%s,%s,%s,%s)"
-        #mycursor.execute("DROP TABLE IF EXISTS Team")
+        mycursor.execute("SET foreign_key_checks = 0")
+        mycursor.execute("DELETE FROM `Team` WHERE True")
         for i in range (len(teams.keys())):
             
             data = (i+1,1,list(teams.keys())[i],list(teams.keys())[i].split(" ")[0],"some/url")
            
             mycursor.execute(stm,data)  
             self.mydb.commit()
-    def sql_insert_game(self,data):
+    def _sql_insert_game(self,data):
         mycursor = self.mydb.cursor()
         
         stm="INSERT INTO `Game`(`GameId`,`SeasonId`, `HomeTeamId`, `AwayTeamId`, `Date`, `StartTime`, `HomeTeamWon`) ""VALUES (%s,%s,%s,%s,%s,%s,%s)"   
+        mycursor.execute("DELETE FROM `Game` WHERE True")
         mycursor.execute(stm,data)   
-    def sql_insert_prediction(self,data):
+    def _sql_insert_prediction(self,data):
 
         mycursor = self.mydb.cursor()
-        
+        mycursor.execute("DELETE FROM `MLModelGamePrediction` WHERE True")
         stm="INSERT INTO `MLModelGamePrediction`(`MLModelId`, `GameId`, `HomeTeamPred`, `Percentage`) ""VALUES (%s,%s,%s,%s)"   
         mycursor.execute(stm,data)         
 
@@ -84,9 +86,9 @@ class App(object):
             #print(type(HomeTeamId)+type(AwayTeamId))
             data_game = (i,1,HomeTeamId[0],AwayTeamId[0],date.today().strftime("%y-%m-%d"),"1900",str(int(winpercentage[i]>0.5))) 
            
-            self.sql_insert_game(data_game)
+            self._sql_insert_game(data_game)
             data_pred=(1,i,int(winpercentage[i]>0.5),f'{winpercentage[i]:.2f}')
-            self.sql_insert_prediction(data_pred)
+            self._sql_insert_prediction(data_pred)
             self.mydb.commit() 
                        
              
@@ -98,7 +100,7 @@ class App(object):
         
         
       
-#App().sql_insert_query()
+App()._sql_insert_query()
 #print(dailyMatchupsPresent(App().currentdate)
 
 App().daily_prediction_entry()
