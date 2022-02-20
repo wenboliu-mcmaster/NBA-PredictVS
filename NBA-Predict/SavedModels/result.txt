@@ -1,1 +1,1 @@
-hometeam:Phoenix Suns awayteam:Los Angeles Clippers02/15/22[False  True  True  True  True False  True]
+hometeam:  Phoenix Suns awayteam:  Los Angeles Clippers02/18/22 hometeamwin:  1added on date 02/18/22

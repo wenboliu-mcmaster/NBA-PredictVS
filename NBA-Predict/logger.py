@@ -30,6 +30,5 @@ f_handler.setFormatter(f_format)
 logger.addHandler(c_handler)
 logger.addHandler(f_handler)
 
-logger.warning('This is a warning')
-logger.error('This is an error')
+        
 

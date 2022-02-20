@@ -62,7 +62,6 @@ def dailyMatchupsPresent(date):
         for team, teamID in teams.items():  # Finds name of the away team that corresponds with teamID
             if teamID == awayTeamID:
                 awayTeamName = team
-
         homeAwayDict.update({homeTeamName:awayTeamName})
 
     return homeAwayDict

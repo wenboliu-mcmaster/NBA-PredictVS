@@ -1,14 +1,15 @@
 import configparser
 from pickle import NONE
 import mysql.connector
-import logging
+import logger,logging
 from NBA_Predict import predictDailyGames
-from datetime import date
+from datetime import date, timedelta,datetime
 from getDailyMatchups import dailyMatchupsPresent,dailyMatchupsPast
 import pandas as pd 
 from teamIds import teams
 import json 
 import _pickle as pickle
+import csv
 
 class App(object):
     __instance=None 
@@ -19,10 +20,10 @@ class App(object):
         self.currentdate = today.strftime("%m/%d/%y")
                 
         self.mydb = mysql.connector.connect(
-            host = "b34wwyzhk6qwzgerwfb0-mysql.services.clever-cloud.com",
-            user="uojlwsohujiqmbo1",
-            passwd="db8jXOpiyuTYrlLryjHS",
-            database="b34wwyzhk6qwzgerwfb0"
+            host = "bxpjbhq1hfealtjgr476-mysql.services.clever-cloud.com",
+            user="u0wsinrzbzwfyhsq",
+            passwd="AgrGxTm7lc2Zn4TvXk0d",
+            database="bxpjbhq1hfealtjgr476"
             )
     def _sql_Select_query(self,stm,data):
         
@@ -51,12 +52,12 @@ class App(object):
         mycursor = self.mydb.cursor()
         
         stm="INSERT INTO `Game`(`GameId`,`SeasonId`, `HomeTeamId`, `AwayTeamId`, `Date`, `StartTime`, `HomeTeamWon`) ""VALUES (%s,%s,%s,%s,%s,%s,%s)"   
-        mycursor.execute("DELETE FROM `Game` WHERE True")
+        #mycursor.execute("DELETE FROM `Game` WHERE True")
         mycursor.execute(stm,data)   
     def _sql_insert_prediction(self,data):
 
         mycursor = self.mydb.cursor()
-        mycursor.execute("DELETE FROM `MLModelGamePrediction` WHERE True")
+        #mycursor.execute("DELETE FROM `MLModelGamePrediction` WHERE True")
         stm="INSERT INTO `MLModelGamePrediction`(`MLModelId`, `GameId`, `HomeTeamPred`, `Percentage`) ""VALUES (%s,%s,%s,%s)"   
         mycursor.execute(stm,data)         
 
@@ -65,40 +66,47 @@ class App(object):
             cls.__instance = super(App,cls).__new__(cls)
             cls.__instance.setup()
         return cls.__instance
+  
     def daily_prediction_entry(self):
-
-        db_dailymatchups_results= []
         
-        db_dailymatchups_results=predictDailyGames(self.currentdate, '2021-22', '10/19/2021')
+        db_dailymatchups_results= []
+        try:
+            db_dailymatchups_results=predictDailyGames(self.currentdate ,'2021-22', '10/19/2021')  
+        except Exception as e:
+            
+            print(e)
+            print('Because there is no game schedue for '+self.currentdate)
+            logger.logger.error('there is no game schedue for '+self.currentdate)
+            quit()
+       
         homeTeam=[]
         awayTeam=[]
         winpercentage=[]
-        winpercentage= db_dailymatchups_results[1][:,1]
+        winpercentage= db_dailymatchups_results[1][:,1]        
         for k,v in db_dailymatchups_results[0].items():
             homeTeam.append(k) 
-            awayTeam.append(v)
-        
-       
-        for i in range ( len(homeTeam)):
+            awayTeam.append(v)  
+        with open('mysql_backup.txt', 'a') as f:
 
-            HomeTeamId=self._sql_Select_query("SELECT `TeamId`FROM `Team` WHERE  `TeamName`=%(name)s",{'name':homeTeam[i]})
-            AwayTeamId=self._sql_Select_query("SELECT `TeamId`FROM `Team` WHERE  `TeamName`=%(name)s",{'name':awayTeam[i]})
-            #print(type(HomeTeamId)+type(AwayTeamId))
-            data_game = (i,1,HomeTeamId[0],AwayTeamId[0],date.today().strftime("%y-%m-%d"),"1900",str(int(winpercentage[i]>0.5))) 
+            for i in range ( len(homeTeam)):
+                id=datetime.now().month*10000+datetime.now().day*100+i+1
+
+                HomeTeamId=self._sql_Select_query("SELECT `TeamId`FROM `Team` WHERE  `TeamName`=%(name)s",{'name':homeTeam[i]})
+                AwayTeamId=self._sql_Select_query("SELECT `TeamId`FROM `Team` WHERE  `TeamName`=%(name)s",{'name':awayTeam[i]})
+            
+                data_game = (id,1,HomeTeamId[0],AwayTeamId[0],date.today().strftime("%y-%m-%d"),"1900",str(int(winpercentage[i]>0.5))) 
            
-            self._sql_insert_game(data_game)
-            data_pred=(1,i,int(winpercentage[i]>0.5),f'{winpercentage[i]:.2f}')
-            self._sql_insert_prediction(data_pred)
-            self.mydb.commit() 
-                       
-             
-            #print(homeTeam[i]+awayTeam[i]+str(int(winpercentage[i]>0.5)))
-            with open('result.csv', 'w') as file: 
-                
-                file.write("hometeam:  "+str(homeTeam[i])+" "+"awayteam:  "+str(awayTeam[i])+self.currentdate+" hometeamwin:  "+str(int(winpercentage[i]>0.5)))
-                file.write("added on date"+" "+self.currentdate)
+                self._sql_insert_game(data_game)
+                data_pred=(1,id,int(winpercentage[i]>0.5),f'{winpercentage[i]:.2f}')
+                self._sql_insert_prediction(data_pred)
+                self.mydb.commit()                     
+                print(homeTeam[i]+awayTeam[i]+str(int(winpercentage[i]>0.5)))        
+            
         
+                f.write("added on date:"+self.currentdate+homeTeam[i]+awayTeam[i]+' '+str(winpercentage[i]))
         
+
+ 
       
 App()._sql_insert_query()
 #print(dailyMatchupsPresent(App().currentdate)
