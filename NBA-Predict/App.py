@@ -10,14 +10,26 @@ from teamIds import teams
 import json 
 import _pickle as pickle
 import csv
+import requests
+from datetime import datetime, timezone
+from dateutil import parser
+#from updatedailymatch import game_time
+#from nba_api.live.nba.endpoints import scoreboard
+#from nba_api.live.nba.endpoints import boxscore
+import requests
+
+
 
 class App(object):
     __instance=None 
 
     def setup(self):
         today = date.today()
+        yesterday = today - timedelta(1)
         # dd/mm/YY
         self.currentdate = today.strftime("%m/%d/%y")
+        self.yesterday=yesterday.strftime('%Y%m%d')
+        
                 
         self.mydb = mysql.connector.connect(
             host = "bxpjbhq1hfealtjgr476-mysql.services.clever-cloud.com",
@@ -59,14 +71,41 @@ class App(object):
         mycursor = self.mydb.cursor()
         #mycursor.execute("DELETE FROM `MLModelGamePrediction` WHERE True")
         stm="INSERT INTO `MLModelGamePrediction`(`MLModelId`, `GameId`, `HomeTeamPred`, `Percentage`) ""VALUES (%s,%s,%s,%s)"   
-        mycursor.execute(stm,data)         
+        mycursor.execute(stm,data)   
+        self.mydb.commit()
+    
+        
 
     def __new__(cls):
         if (cls.__instance is None):
             cls.__instance = super(App,cls).__new__(cls)
             cls.__instance.setup()
         return cls.__instance
-  
+    def updata_yesterday_games(self):
+        #url="https://api.sportsdata.io/v3/nba/scores/json/GamesByDate/2022-02-16?key=bd619c3787264f4fa32d0057a47e386a"
+        url='http://data.nba.net/10s/prod/v1/'+self.yesterday+'/scoreboard.json'
+        y=requests.get(url,timeout=120)
+        numgames=y.json()["numGames"]
+        vistor_score=[]
+        home_score=[]
+        home_win=[]
+        mycursor = self.mydb.cursor()  
+        yesterday=date.today() - timedelta(1)
+
+        for i in range(numgames):    
+            vistor_score.append(y.json()["games"][i]["vTeam"]['score'])
+            home_score.append(y.json()["games"][i]["hTeam"]['score'])
+            if home_score[i]>vistor_score[i]:
+                home_win.append(1)
+            else:
+                home_win.append(0)
+        for i in range (len(home_win)):
+
+            stm= "UPDATE `Game` SET `HomeTeamWon`=%s WHERE  `GameId`=%s " 
+            data=(home_win[i],yesterday.month*10000+yesterday.day*100+i+1)
+            mycursor.execute(stm,data)   
+            self.mydb.commit() 
+
     def daily_prediction_entry(self):
         
         db_dailymatchups_results= []
@@ -82,6 +121,7 @@ class App(object):
         homeTeam=[]
         awayTeam=[]
         winpercentage=[]
+        
         winpercentage= db_dailymatchups_results[1][:,1]        
         for k,v in db_dailymatchups_results[0].items():
             homeTeam.append(k) 
@@ -93,6 +133,7 @@ class App(object):
 
                 HomeTeamId=self._sql_Select_query("SELECT `TeamId`FROM `Team` WHERE  `TeamName`=%(name)s",{'name':homeTeam[i]})
                 AwayTeamId=self._sql_Select_query("SELECT `TeamId`FROM `Team` WHERE  `TeamName`=%(name)s",{'name':awayTeam[i]})
+
             
                 data_game = (id,1,HomeTeamId[0],AwayTeamId[0],date.today().strftime("%y-%m-%d"),"1900",str(int(winpercentage[i]>0.5))) 
            
@@ -103,7 +144,7 @@ class App(object):
                 print(homeTeam[i]+awayTeam[i]+str(int(winpercentage[i]>0.5)))        
             
         
-                f.write("added on date:"+self.currentdate+homeTeam[i]+awayTeam[i]+' '+str(winpercentage[i]))
+                f.write("added on date:"+self.currentdate+homeTeam[i]+awayTeam[i]+' '+str(winpercentage[i])+"\n")
         
 
  
@@ -112,5 +153,6 @@ App()._sql_insert_query()
 #print(dailyMatchupsPresent(App().currentdate)
 
 App().daily_prediction_entry()
+App().updata_yesterday_games()
 
 

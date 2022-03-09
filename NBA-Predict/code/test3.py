@@ -27,12 +27,27 @@ import requests
 # waiting too long..
 #x = requests.get('https://stats.nba.com/stats/playerprofilev2?LeagueID=00&PerMode=Totals&PlayerID=1629637')
 #print(x.status_code)
-
-    
+from datetime import date, timedelta
+yesterday_date = date.today() - timedelta(1)
+url_today='http://data.nba.net/10s/prod/v1/'+yesterday_date.strftime('%Y%m%d')+'/scoreboard.json'
 url='https://nba-prod-us-east-1-mediaops-stats.s3.amazonaws.com/NBA/liveData/scoreboard/todaysScoreboard_00.json'
 url2='https://stats.nba.com/stats/boxscoreplayertrackv2?GameID=0021700807'
-y=requests.get(url,timeout=120)
-#print(y.json())
+y=requests.get(url_today,timeout=120)
+numgames=y.json()["numGames"]
+
+vistor_score=[]
+home_score=[]
+home_win=[]
+for i in range(numgames):    
+    vistor_score.append(y.json()["games"][i]["vTeam"]['score'])
+    home_score.append(y.json()["games"][i]["hTeam"]['score'])
+    if home_score[i]>vistor_score[i]:
+        home_win.append(1)
+    else:
+        home_win.append(0)
+    
+print(home_win)    
+
 
 box = boxscore.BoxScore('0022100766') 
 
@@ -65,6 +80,7 @@ def game_time():
 
 a=game_time()
 print(a)
-with open('game_time.txt', 'w') as f:
+with open('game_time.txt', 'a') as f:
     f.write(str(a)+"\n")
+
     

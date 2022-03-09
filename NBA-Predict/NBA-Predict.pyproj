@@ -33,6 +33,7 @@
     <Compile Include="config.cfg" />
     <Compile Include="logger.py" />
     <Compile Include="db_logger.log" />
+    <Compile Include="module1.py" />
     <Compile Include="NBA_Predict.py" />
     <Compile Include="standardizeStats.py" />
     <Compile Include="teamIds.py" />
