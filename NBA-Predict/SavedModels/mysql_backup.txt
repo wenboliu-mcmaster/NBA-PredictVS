@@ -70,3 +70,46 @@ added on date:03/09/22San Antonio SpursToronto Raptors 0.5498243169902883
 added on date:03/09/22Utah JazzPortland Trail Blazers 0.823794981376074
 added on date:03/09/22Sacramento KingsDenver Nuggets 0.35780537343134766
 added on date:03/09/22Los Angeles ClippersWashington Wizards 0.6214725867764236
+added on date:03/09/22Charlotte BobcatsBoston Celtics 0.44690304243081796
+added on date:03/09/22Detroit PistonsChicago Bulls 0.2828854254778824
+added on date:03/09/22Miami HeatPhoenix Suns 0.51839841877635
+added on date:03/09/22Milwaukee BucksAtlanta Hawks 0.6733445145357099
+added on date:03/09/22Houston RocketsLos Angeles Lakers 0.42601335216043884
+added on date:03/09/22Minnesota TimberwolvesOklahoma City Thunder 0.8190788575328477
+added on date:03/09/22New Orleans PelicansOrlando Magic 0.7274767584867841
+added on date:03/09/22Dallas MavericksNew York Knicks 0.737877097946964
+added on date:03/09/22San Antonio SpursToronto Raptors 0.5498243169902883
+added on date:03/09/22Utah JazzPortland Trail Blazers 0.823794981376074
+added on date:03/09/22Sacramento KingsDenver Nuggets 0.35780537343134766
+added on date:03/09/22Los Angeles ClippersWashington Wizards 0.6214725867764236
+added on date:03/09/22Charlotte BobcatsBoston Celtics 0.44690304243081796
+added on date:03/09/22Detroit PistonsChicago Bulls 0.2828854254778824
+added on date:03/09/22Miami HeatPhoenix Suns 0.51839841877635
+added on date:03/09/22Milwaukee BucksAtlanta Hawks 0.6733445145357099
+added on date:03/09/22Houston RocketsLos Angeles Lakers 0.42601335216043884
+added on date:03/09/22Minnesota TimberwolvesOklahoma City Thunder 0.8190788575328477
+added on date:03/09/22New Orleans PelicansOrlando Magic 0.7274767584867841
+added on date:03/09/22Dallas MavericksNew York Knicks 0.737877097946964
+added on date:03/09/22San Antonio SpursToronto Raptors 0.5498243169902883
+added on date:03/09/22Utah JazzPortland Trail Blazers 0.823794981376074
+added on date:03/09/22Sacramento KingsDenver Nuggets 0.35780537343134766
+added on date:03/09/22Los Angeles ClippersWashington Wizards 0.6214725867764236
+added on date:03/12/22Miami HeatMinnesota Timberwolves 0.6542718182165931
+added on date:03/12/22Chicago BullsCleveland Cavaliers 0.5701806128871687
+added on date:03/12/22San Antonio SpursIndiana Pacers 0.625909245842661
+added on date:03/12/22Golden State WarriorsMilwaukee Bucks 0.6554262433503512
+added on date:03/12/22Denver NuggetsToronto Raptors 0.6842275051049552
+added on date:03/12/22Utah JazzSacramento Kings 0.8197629570707629
+added on date:03/12/22Portland Trail BlazersWashington Wizards 0.49048540325087503
+added on date:03/13/22New Jersey NetsNew York Knicks 0.6572634312835655
+added on date:03/13/22Detroit PistonsLos Angeles Clippers 0.35075753994659453
+added on date:03/13/22Boston CelticsDallas Mavericks 0.6295790108968887
+added on date:03/13/22Orlando MagicPhiladelphia 76ers 0.30675730448060595
+added on date:03/13/22Atlanta HawksIndiana Pacers 0.6757424318267135
+added on date:03/13/22New Orleans PelicansHouston Rockets 0.6990100732944091
+added on date:03/13/22Oklahoma City ThunderMemphis Grizzlies 0.2826266515673103
+added on date:03/13/22Phoenix SunsLos Angeles Lakers 0.8006534146662106
+added on date:03/15/22Indiana PacersMemphis Grizzlies 0.41155840383583003
+added on date:03/15/22Orlando MagicNew Jersey Nets 0.37387823740349113
+added on date:03/15/22Miami HeatDetroit Pistons 0.869394681571171
+added on date:03/15/22New Orleans PelicansPhoenix Suns 0.3051554143186111

@@ -8,7 +8,7 @@ from getDailyMatchups import dailyMatchupsPresent,dailyMatchupsPast
 import pandas as pd 
 from teamIds import teams
 import json 
-import _pickle as pickle
+#import _pickle as pickle
 import csv
 import requests
 from datetime import datetime, timezone
@@ -17,8 +17,6 @@ from dateutil import parser
 #from nba_api.live.nba.endpoints import scoreboard
 #from nba_api.live.nba.endpoints import boxscore
 import requests
-
-
 
 class App(object):
     __instance=None 
@@ -32,10 +30,10 @@ class App(object):
         
                 
         self.mydb = mysql.connector.connect(
-            host = "bxpjbhq1hfealtjgr476-mysql.services.clever-cloud.com",
-            user="u0wsinrzbzwfyhsq",
-            passwd="AgrGxTm7lc2Zn4TvXk0d",
-            database="bxpjbhq1hfealtjgr476"
+            host = "b34wwyzhk6qwzgerwfb0-mysql.services.clever-cloud.com",
+            user="uojlwsohujiqmbo1",
+            passwd="db8jXOpiyuTYrlLryjHS",
+            database="b34wwyzhk6qwzgerwfb0"
             )
     def _sql_Select_query(self,stm,data):
         
@@ -74,8 +72,6 @@ class App(object):
         mycursor.execute(stm,data)   
         self.mydb.commit()
     
-        
-
     def __new__(cls):
         if (cls.__instance is None):
             cls.__instance = super(App,cls).__new__(cls)
@@ -121,6 +117,12 @@ class App(object):
         homeTeam=[]
         awayTeam=[]
         winpercentage=[]
+        url_today='http://data.nba.net/10s/prod/v1/'+date.today().strftime('%Y%m%d')+'/scoreboard.json'
+        y=requests.get(url_today,timeout=120)
+        numgames=y.json()["numGames"]
+        homeStartTime=[]
+        for i in range(numgames):   
+            homeStartTime.append(y.json()["games"][i]["homeStartTime"])
         
         winpercentage= db_dailymatchups_results[1][:,1]        
         for k,v in db_dailymatchups_results[0].items():
@@ -135,7 +137,7 @@ class App(object):
                 AwayTeamId=self._sql_Select_query("SELECT `TeamId`FROM `Team` WHERE  `TeamName`=%(name)s",{'name':awayTeam[i]})
 
             
-                data_game = (id,1,HomeTeamId[0],AwayTeamId[0],date.today().strftime("%y-%m-%d"),"1900",str(int(winpercentage[i]>0.5))) 
+                data_game = (id,1,HomeTeamId[0],AwayTeamId[0],date.today().strftime("%y-%m-%d"),homeStartTime[i],str(int(winpercentage[i]>0.5))) 
            
                 self._sql_insert_game(data_game)
                 data_pred=(1,id,int(winpercentage[i]>0.5),f'{winpercentage[i]:.2f}')

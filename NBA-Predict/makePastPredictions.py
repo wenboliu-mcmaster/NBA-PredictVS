@@ -2,7 +2,7 @@
 
 import pickle
 import pandas as pd
-
+#from nba_api.live.nba.endpoints import scoreboard
 from createModel import getTrainingSet, createDataFrame
 from configureCWD import setCurrentWorkingDirectory
 

@@ -38,16 +38,31 @@ numgames=y.json()["numGames"]
 vistor_score=[]
 home_score=[]
 home_win=[]
+homeStartTime=[]
 for i in range(numgames):    
     vistor_score.append(y.json()["games"][i]["vTeam"]['score'])
     home_score.append(y.json()["games"][i]["hTeam"]['score'])
+    homeStartTime.append(y.json()["games"][i]["homeStartTime"])
     if home_score[i]>vistor_score[i]:
         home_win.append(1)
     else:
         home_win.append(0)
     
-print(home_win)    
+print(home_win)   
 
+url_today='http://data.nba.net/10s/prod/v1/'+date.today().strftime('%Y%m%d')+'/scoreboard.json'
+
+y=requests.get(url_today,timeout=120)
+numgames=y.json()["numGames"]
+
+homeStartTime=[]
+for i in range(numgames):    
+
+    homeStartTime.append(y.json()["games"][i]["homeStartTime"])
+
+    
+print(homeStartTime)   
+print("done")
 
 box = boxscore.BoxScore('0022100766') 
 
