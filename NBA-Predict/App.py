@@ -61,7 +61,7 @@ class App(object):
     def _sql_insert_game(self,data):
         mycursor = self.mydb.cursor()
         
-        stm="INSERT INTO `Game`(`GameId`,`SeasonId`, `HomeTeamId`, `AwayTeamId`, `Date`, `StartTime`, `HomeTeamWon`) ""VALUES (%s,%s,%s,%s,%s,%s,%s)"   
+        stm="INSERT INTO `Game`(`GameId`,`SeasonId`, `HomeTeamId`, `AwayTeamId`, `Date`, `StartTime`) ""VALUES (%s,%s,%s,%s,%s,%s)"   
         #mycursor.execute("DELETE FROM `Game` WHERE True")
         mycursor.execute(stm,data)   
     def _sql_insert_prediction(self,data):
@@ -71,6 +71,13 @@ class App(object):
         stm="INSERT INTO `MLModelGamePrediction`(`MLModelId`, `GameId`, `HomeTeamPred`, `Percentage`) ""VALUES (%s,%s,%s,%s)"   
         mycursor.execute(stm,data)   
         self.mydb.commit()
+    def _sql_update_null(self):
+        mycursor = self.mydb.cursor()
+        stm="UPDATE `Game` SET `HomeTeamWon`=NULL "   
+        mycursor.execute(stm)   
+        self.mydb.commit()
+
+
     
     def __new__(cls):
         if (cls.__instance is None):
@@ -131,17 +138,19 @@ class App(object):
         with open('mysql_backup.txt', 'a') as f:
 
             for i in range ( len(homeTeam)):
+                
                 id=datetime.now().month*10000+datetime.now().day*100+i+1
 
                 HomeTeamId=self._sql_Select_query("SELECT `TeamId`FROM `Team` WHERE  `TeamName`=%(name)s",{'name':homeTeam[i]})
                 AwayTeamId=self._sql_Select_query("SELECT `TeamId`FROM `Team` WHERE  `TeamName`=%(name)s",{'name':awayTeam[i]})
 
             
-                data_game = (id,1,HomeTeamId[0],AwayTeamId[0],date.today().strftime("%y-%m-%d"),homeStartTime[i],str(int(winpercentage[i]>0.5))) 
+                data_game = (id,1,HomeTeamId[0],AwayTeamId[0],date.today().strftime("%y-%m-%d"),homeStartTime[i])
            
                 self._sql_insert_game(data_game)
                 data_pred=(1,id,int(winpercentage[i]>0.5),f'{winpercentage[i]:.2f}')
                 self._sql_insert_prediction(data_pred)
+                #self._sql_update_null()
                 self.mydb.commit()                     
                 print(homeTeam[i]+awayTeam[i]+str(int(winpercentage[i]>0.5)))        
             
