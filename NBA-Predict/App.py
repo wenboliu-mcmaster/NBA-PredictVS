@@ -77,8 +77,6 @@ class App(object):
         mycursor.execute(stm)   
         self.mydb.commit()
 
-
-    
     def __new__(cls):
         if (cls.__instance is None):
             cls.__instance = super(App,cls).__new__(cls)
@@ -155,7 +153,7 @@ class App(object):
                 print(homeTeam[i]+awayTeam[i]+str(int(winpercentage[i]>0.5)))        
             
         
-                f.write("added on date:"+self.currentdate+homeTeam[i]+awayTeam[i]+' '+str(winpercentage[i])+"\n")
+                f.write("added on date:"+self.currentdate+homeTeam[i]+awayTeam[i]+'  '+str(winpercentage[i])+"\n")
         
 
  
