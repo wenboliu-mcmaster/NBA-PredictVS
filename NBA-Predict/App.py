@@ -158,7 +158,7 @@ class App(object):
 
  
       
-App()._sql_insert_query()
+#App()._sql_insert_query()
 #print(dailyMatchupsPresent(App().currentdate)
 
 App().daily_prediction_entry()

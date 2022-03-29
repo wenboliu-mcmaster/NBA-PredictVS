@@ -178,3 +178,8 @@ added on date:03/28/22Toronto RaptorsBoston Celtics 0.43298033255723206
 added on date:03/28/22Houston RocketsSan Antonio Spurs 0.4554291286709099
 added on date:03/28/22Memphis GrizzliesGolden State Warriors 0.5342884779877106
 added on date:03/28/22Portland Trail BlazersOklahoma City Thunder 0.6303206375967109
+added on date:03/29/22Philadelphia 76ersMilwaukee Bucks  0.5633049455954071
+added on date:03/29/22Washington WizardsChicago Bulls  0.4745440441178924
+added on date:03/29/22Brooklyn NetsDetroit Pistons  0.792887648777585
+added on date:03/29/22Dallas MavericksLos Angeles Lakers  0.7048325780907341
+added on date:03/29/22Los Angeles ClippersUtah Jazz  0.4005848595384101
