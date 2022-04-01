@@ -14,7 +14,7 @@ teams = {
         "Golden State Warriors": 1610612744,
         "Houston Rockets": 1610612745,
         "Indiana Pacers": 1610612754,
-        "LA Clippers": 1610612746,
+        
         "Los Angeles Clippers": 1610612746,
         "Los Angeles Lakers": 1610612747,
         "Memphis Grizzlies": 1610612763,

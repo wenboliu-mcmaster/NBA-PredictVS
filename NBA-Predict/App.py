@@ -70,6 +70,16 @@ class App(object):
         #mycursor.execute("DELETE FROM `MLModelGamePrediction` WHERE True")
         stm="INSERT INTO `MLModelGamePrediction`(`MLModelId`, `GameId`, `HomeTeamPred`, `Percentage`) ""VALUES (%s,%s,%s,%s)"   
         mycursor.execute(stm,data)   
+        #mycursor.execute("CALL AUTO_SELECT(id,hometeampreidct,1)") 
+        self.mydb.commit()
+    def _auto_slelect(self,id,hometeampredict):
+
+        mycursor = self.mydb.cursor()
+        #mycursor.execute("DELETE FROM `MLModelGamePrediction` WHERE True")
+        #stm="INSERT INTO `MLModelGamePrediction`(`MLModelId`, `GameId`, `HomeTeamPred`, `Percentage`) ""VALUES (%s,%s,%s,%s)"   
+        #mycursor.execute(stm,data)  
+        args = [id, hometeampredict,1] 
+        mycursor.callproc('AUTO_SELECT', args) 
         self.mydb.commit()
     def _sql_update_null(self):
         mycursor = self.mydb.cursor()
@@ -94,12 +104,17 @@ class App(object):
         yesterday=date.today() - timedelta(1)
 
         for i in range(numgames):    
-            vistor_score.append(y.json()["games"][i]["vTeam"]['score'])
+            
             home_score.append(y.json()["games"][i]["hTeam"]['score'])
-            if home_score[i]>vistor_score[i]:
+            vistor_score.append(y.json()["games"][i]["vTeam"]['score'])
+            if int(home_score[i])>int(vistor_score[i]):
                 home_win.append(1)
             else:
                 home_win.append(0)
+            #print(home_win)
+            
+            #print(vistor_score)
+            #print(home_score[i]>vistor_score[i])
         for i in range (len(home_win)):
 
             stm= "UPDATE `Game` SET `HomeTeamWon`=%s WHERE  `GameId`=%s " 
@@ -127,7 +142,8 @@ class App(object):
         numgames=y.json()["numGames"]
         homeStartTime=[]
         for i in range(numgames):   
-            homeStartTime.append(y.json()["games"][i]["homeStartTime"])
+            #homeStartTime.append(y.json()["games"][i]["startTimeEastern"].split(' ')[0].split(':')[0]*100+y.json()["games"][i]["startTimeEastern"].split(' ')[0].split(':')[1])
+            homeStartTime.append(int(y.json()["games"][i]["startTimeEastern"].split(' ')[0].split(':')[0]+y.json()["games"][i]["startTimeEastern"].split(' ')[0].split(':')[1])+1200)
         
         winpercentage= db_dailymatchups_results[1][:,1]        
         for k,v in db_dailymatchups_results[0].items():
@@ -147,8 +163,11 @@ class App(object):
            
                 self._sql_insert_game(data_game)
                 data_pred=(1,id,int(winpercentage[i]>0.5),f'{winpercentage[i]:.2f}')
+                #input_data=(id,int(winpercentage[i]>0.5),1)
                 self._sql_insert_prediction(data_pred)
+                self._auto_slelect(id,int(winpercentage[i]>0.5))
                 #self._sql_update_null()
+
                 self.mydb.commit()                     
                 print(homeTeam[i]+awayTeam[i]+str(int(winpercentage[i]>0.5)))        
             
