@@ -111,10 +111,22 @@ class App(object):
                 home_win.append(1)
             else:
                 home_win.append(0)
+        with open('NBA_Daily_results_backup.txt', 'a') as f:
+            home_win_string=" ".join(home_score)
+            vistor_score_string=" ".join(vistor_score)
+            f.write("updating games results:"+str(self.yesterday)+"\n")
+            f.write("home team scores:  "+"\n")
+            f.write(home_win_string)
+            f.write("\n")
+            f.write("visitor team scores:  "+"\n")
+            f.write(vistor_score_string)
+            f.write("\n")
+
             #print(home_win)
             
             #print(vistor_score)
             #print(home_score[i]>vistor_score[i])
+
         for i in range (len(home_win)):
 
             stm= "UPDATE `Game` SET `HomeTeamWon`=%s WHERE  `GameId`=%s " 
@@ -180,7 +192,7 @@ class App(object):
 #App()._sql_insert_query()
 #print(dailyMatchupsPresent(App().currentdate)
 
-App().daily_prediction_entry()
+#App().daily_prediction_entry()
 App().updata_yesterday_games()
 
 

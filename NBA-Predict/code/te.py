@@ -11,3 +11,4 @@ for i in range(numgames):
     homeStartTime=[]
     homeStartTime.append(int(y.json()["games"][i]["startTimeEastern"].split(' ')[0].split(':')[0]+y.json()["games"][i]["startTimeEastern"].split(' ')[0].split(':')[1])+1200)
 print(homeStartTime)       
+print("102">"97")
