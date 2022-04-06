@@ -8,33 +8,39 @@ from getDailyMatchups import dailyMatchupsPresent,dailyMatchupsPast
 import pandas as pd 
 from teamIds import teams
 import json 
-#import _pickle as pickle
+
 import csv
 import requests
 from datetime import datetime, timezone
 from dateutil import parser
-#from updatedailymatch import game_time
-#from nba_api.live.nba.endpoints import scoreboard
-#from nba_api.live.nba.endpoints import boxscore
+
 import requests
 
 class App(object):
     __instance=None 
-
+    # using singleton pattern to connect to database
     def setup(self):
         today = date.today()
         yesterday = today - timedelta(1)
-        # dd/mm/YY
+        
         self.currentdate = today.strftime("%m/%d/%y")
         self.yesterday=yesterday.strftime('%Y%m%d')
         
-                
+        # database host can be updated         
         self.mydb = mysql.connector.connect(
             host = "b34wwyzhk6qwzgerwfb0-mysql.services.clever-cloud.com",
             user="uojlwsohujiqmbo1",
             passwd="db8jXOpiyuTYrlLryjHS",
             database="b34wwyzhk6qwzgerwfb0"
             )
+    
+
+    def __new__(cls):
+        if (cls.__instance is None):
+            cls.__instance = super(App,cls).__new__(cls)
+            cls.__instance.setup()
+        return cls.__instance
+    # this helper function is used later to do database queries 
     def _sql_Select_query(self,stm,data):
         
         mycursor = self.mydb.cursor()
@@ -46,6 +52,7 @@ class App(object):
         for x in myresult:
             #print(x)
              return x
+    # another helper function for database queries
     def _sql_insert_query(self):
         
         mycursor = self.mydb.cursor()
@@ -58,26 +65,24 @@ class App(object):
            
             mycursor.execute(stm,data)  
             self.mydb.commit()
+    # this helper function is used to populate the team table in database
     def _sql_insert_game(self,data):
         mycursor = self.mydb.cursor()
         
         stm="INSERT INTO `Game`(`GameId`,`SeasonId`, `HomeTeamId`, `AwayTeamId`, `Date`, `StartTime`) ""VALUES (%s,%s,%s,%s,%s,%s)"   
-        #mycursor.execute("DELETE FROM `Game` WHERE True")
-        mycursor.execute(stm,data)   
+        
+        mycursor.execute(stm,data) 
+    # this helper function is used to populate the game table in database 
     def _sql_insert_prediction(self,data):
 
         mycursor = self.mydb.cursor()
-        #mycursor.execute("DELETE FROM `MLModelGamePrediction` WHERE True")
         stm="INSERT INTO `MLModelGamePrediction`(`MLModelId`, `GameId`, `HomeTeamPred`, `Percentage`) ""VALUES (%s,%s,%s,%s)"   
         mycursor.execute(stm,data)   
-        #mycursor.execute("CALL AUTO_SELECT(id,hometeampreidct,1)") 
         self.mydb.commit()
+    # this helper function is used to run stored procedure in database
     def _auto_slelect(self,id,hometeampredict):
 
         mycursor = self.mydb.cursor()
-        #mycursor.execute("DELETE FROM `MLModelGamePrediction` WHERE True")
-        #stm="INSERT INTO `MLModelGamePrediction`(`MLModelId`, `GameId`, `HomeTeamPred`, `Percentage`) ""VALUES (%s,%s,%s,%s)"   
-        #mycursor.execute(stm,data)  
         args = [id, hometeampredict,1] 
         mycursor.callproc('AUTO_SELECT', args) 
         self.mydb.commit()
@@ -86,14 +91,9 @@ class App(object):
         stm="UPDATE `Game` SET `HomeTeamWon`=NULL "   
         mycursor.execute(stm)   
         self.mydb.commit()
-
-    def __new__(cls):
-        if (cls.__instance is None):
-            cls.__instance = super(App,cls).__new__(cls)
-            cls.__instance.setup()
-        return cls.__instance
+    # this helper function is used to update the game result 
     def updata_yesterday_games(self):
-        #url="https://api.sportsdata.io/v3/nba/scores/json/GamesByDate/2022-02-16?key=bd619c3787264f4fa32d0057a47e386a"
+       
         url='http://data.nba.net/10s/prod/v1/'+self.yesterday+'/scoreboard.json'
         y=requests.get(url,timeout=120)
         numgames=y.json()["numGames"]
@@ -102,15 +102,14 @@ class App(object):
         home_win=[]
         mycursor = self.mydb.cursor()  
         yesterday=date.today() - timedelta(1)
-
-        for i in range(numgames):    
-            
+        for i in range(numgames):           
             home_score.append(y.json()["games"][i]["hTeam"]['score'])
             vistor_score.append(y.json()["games"][i]["vTeam"]['score'])
             if int(home_score[i])>int(vistor_score[i]):
                 home_win.append(1)
             else:
                 home_win.append(0)
+        # this is used to write the game results to file 
         with open('NBA_Daily_results_backup.txt', 'a') as f:
             home_win_string=" ".join(home_score)
             vistor_score_string=" ".join(vistor_score)
@@ -121,31 +120,21 @@ class App(object):
             f.write("visitor team scores:  "+"\n")
             f.write(vistor_score_string)
             f.write("\n")
-
-            #print(home_win)
-            
-            #print(vistor_score)
-            #print(home_score[i]>vistor_score[i])
-
         for i in range (len(home_win)):
-
             stm= "UPDATE `Game` SET `HomeTeamWon`=%s WHERE  `GameId`=%s " 
             data=(home_win[i],yesterday.month*10000+yesterday.day*100+i+1)
             mycursor.execute(stm,data)   
             self.mydb.commit() 
-
-    def daily_prediction_entry(self):
-        
+    # this function is used to populate the gameprediction table 
+    def daily_prediction_entry(self):        
         db_dailymatchups_results= []
         try:
-            db_dailymatchups_results=predictDailyGames(self.currentdate ,'2021-22', '10/19/2021')  
-        except Exception as e:
-            
+            db_dailymatchups_results=predictDailyGames(self.currentdate,'2021-22', '10/19/2021')  
+        except Exception as e:            
             print(e)
             print('Because there is no game schedue for '+self.currentdate)
             logger.logger.error('there is no game schedue for '+self.currentdate)
-            quit()
-       
+            quit()       
         homeTeam=[]
         awayTeam=[]
         winpercentage=[]
@@ -154,13 +143,13 @@ class App(object):
         numgames=y.json()["numGames"]
         homeStartTime=[]
         for i in range(numgames):   
-            #homeStartTime.append(y.json()["games"][i]["startTimeEastern"].split(' ')[0].split(':')[0]*100+y.json()["games"][i]["startTimeEastern"].split(' ')[0].split(':')[1])
             homeStartTime.append(int(y.json()["games"][i]["startTimeEastern"].split(' ')[0].split(':')[0]+y.json()["games"][i]["startTimeEastern"].split(' ')[0].split(':')[1])+1200)
         
         winpercentage= db_dailymatchups_results[1][:,1]        
         for k,v in db_dailymatchups_results[0].items():
             homeTeam.append(k) 
             awayTeam.append(v)  
+        # this is to back up the database to files 
         with open('mysql_backup.txt', 'a') as f:
 
             for i in range ( len(homeTeam)):
@@ -175,11 +164,8 @@ class App(object):
            
                 self._sql_insert_game(data_game)
                 data_pred=(1,id,int(winpercentage[i]>0.5),f'{winpercentage[i]:.2f}')
-                #input_data=(id,int(winpercentage[i]>0.5),1)
                 self._sql_insert_prediction(data_pred)
                 self._auto_slelect(id,int(winpercentage[i]>0.5))
-                #self._sql_update_null()
-
                 self.mydb.commit()                     
                 print(homeTeam[i]+awayTeam[i]+str(int(winpercentage[i]>0.5)))        
             
@@ -188,11 +174,11 @@ class App(object):
         
 
  
-      
+# this method is only called only when teams has moved or changed       
 #App()._sql_insert_query()
-#print(dailyMatchupsPresent(App().currentdate)
 
-#App().daily_prediction_entry()
 App().updata_yesterday_games()
+App().daily_prediction_entry()
+
 
 

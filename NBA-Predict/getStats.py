@@ -1,4 +1,6 @@
 # getStats.py - Obtains a grouping of stats for any team in the NBA
+# https://github.com/JakeKandell/NBA-Predict/tree/master/Data by Jake Kandell
+# Essentially what's in the original repo. NOT MY OWN WORK
 
 from teamIds import teams
 from nba_api.stats.endpoints import teamdashboardbygeneralsplits, leaguedashteamstats

@@ -1,3 +1,5 @@
+# https://github.com/JakeKandell/NBA-Predict/tree/master/Data by Jake Kandell
+# Essentially what's in the original repo. NOT MY OWN WORK
 # NBA_Predict.py - Predicts results of NBA games on a specified date
 # Call makeInterpretPrediction with current date, season, and start date of season to run predictions
 
@@ -97,5 +99,5 @@ def makeInterpretPredictions(currentDate, season, startOfSeason):
 
 # EDIT THIS
 # First arg is date to predict (mm/dd/yyyy), second is season (yyyy-yy), and third is start date of season (mm/dd/yyyy)
-#print(makeInterpretPredictions('03/9/2022', '2021-22', '10/19/2021'))
+#print(makeInterpretPredictions('04/9/2022', '2021-22', '10/19/2021'))
 

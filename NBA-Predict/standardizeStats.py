@@ -1,3 +1,5 @@
+# https://github.com/JakeKandell/NBA-Predict/tree/master/Data by Jake Kandell
+# Essentially what's in the original repo. NOT MY OWN WORK
 # standardizeStats.py - Uses Z Scores ((Obs  - Mean) / St Dev.) to standardize any of the different statistics scraped
 
 from nba_api.stats.endpoints import leaguedashteamstats

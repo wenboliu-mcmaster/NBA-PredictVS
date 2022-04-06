@@ -1,3 +1,5 @@
+# https://github.com/JakeKandell/NBA-Predict/tree/master/Data by Jake Kandell
+# Essentially what's in the original repo. NOT MY OWN WORK
 # getDailyMatchups.py - Finds the daily NBA games
 
 from nba_api.stats.endpoints import leaguegamelog, scoreboard

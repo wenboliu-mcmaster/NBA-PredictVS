@@ -1,4 +1,6 @@
 # customHeaders.py
+# https://github.com/JakeKandell/NBA-Predict/tree/master/Data by Jake Kandell
+# Essentially what's in the original repo. NOT MY OWN WORK
 # Used to make requests seem like they're coming from browser
 customHeaders = {
     'Host': 'stats.nba.com',

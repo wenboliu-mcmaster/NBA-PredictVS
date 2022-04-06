@@ -1,3 +1,5 @@
+# https://github.com/JakeKandell/NBA-Predict/tree/master/Data by Jake Kandell
+# Essentially what's in the original repo. NOT MY OWN WORK
 # makePastPredictions.py - Used to predicts specified range of past NBA Games
 
 import pickle

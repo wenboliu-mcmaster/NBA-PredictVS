@@ -1,3 +1,5 @@
+# https://github.com/JakeKandell/NBA-Predict/tree/master/Data by Jake Kandell
+# Essentially what's in the original repo. NOT MY OWN WORK
 # createModel.py - Used to train, test, and create the model
 # Call createModel() to generate a new model
 # May need to edit which lines are commented out based on what range of game data you would like to use
@@ -13,6 +15,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
 import pandas as pd
 import pickle
+from sklearn.neighbors import NearestNeighbors
+from sklearn.neural_network import MLPClassifier
 
 from datetime import timedelta, date
 
@@ -143,7 +147,7 @@ def performLogReg(dataframe):
 
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25, shuffle=True)
     logreg = LogisticRegression()
-
+    
     logreg.fit(X_train, Y_train)  # Fits model with data
 
     Y_pred = logreg.predict(X_test)
@@ -152,6 +156,11 @@ def performLogReg(dataframe):
 
     # Code below prints model accuracy information
     print('Coefficient Information:')
+    # adding another ml model
+    clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
+                    hidden_layer_sizes=(5, 2), random_state=1)
+    clf.fit(X_train, Y_train)
+
 
     for i in range(len(featureColumns)):  # Prints each feature next to its corresponding coefficient in the model
 
@@ -174,6 +183,52 @@ def performLogReg(dataframe):
     print(confusionMatrix)
 
     return logreg
+def performLogANN(dataframe):
+
+    # Update if new stats are added
+    featureColumns = ['W_PCT', 'REB', 'TOV', 'PLUS_MINUS', 'OFF_RATING', 'DEF_RATING', 'TS_PCT']
+
+    X = dataframe[featureColumns] # Features
+    Y = dataframe.Result  # Target Variable
+
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25, shuffle=True)
+    logreg = LogisticRegression()
+    
+    logreg.fit(X_train, Y_train)  # Fits model with data
+
+    Y_pred = logreg.predict(X_test)
+
+    confusionMatrix = metrics.confusion_matrix(Y_test, Y_pred)  # Diagonals tell you correct predictions
+
+    # Code below prints model accuracy information
+    print('Coefficient Information:')
+    # adding another ml model
+    clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
+                    hidden_layer_sizes=(5, 2), random_state=1)
+    clf.fit(X_train, Y_train)
+
+
+    for i in range(len(featureColumns)):  # Prints each feature next to its corresponding coefficient in the model
+
+        logregCoefficients = logreg.coef_
+
+        currentFeature = featureColumns[i]
+        currentCoefficient = logregCoefficients[0][i]
+
+        print(currentFeature + ': ' + str(currentCoefficient))
+
+    print('----------------------------------')
+
+    print("Accuracy:", metrics.accuracy_score(Y_test, Y_pred))
+    print("Precision:", metrics.precision_score(Y_test, Y_pred))
+    print("Recall:", metrics.recall_score(Y_test, Y_pred))
+
+    print('----------------------------------')
+
+    print('Confusion Matrix:')
+    print(confusionMatrix)
+
+    return clf
 
 
 # Saves the model in folder to be used in future
@@ -186,7 +241,13 @@ def saveModel(model, filename):
     with open(filename, 'wb') as file:
         pickle.dump(model, file)
 
+def saveModel2(model, filename):
 
+    # Change to where you want to save the model
+    setCurrentWorkingDirectory('SavedModels2')
+
+    with open(filename, 'wb') as file:
+        pickle.dump(model, file)
 # Used to generate new logistic regression models
 # Can import the statistics and predictions for each game from a csv file or can be created on their own
 def createModel(startYear=None, startMonth=None, startDay=None, endYear=None, endMonth=None, endDay=None, season='2018-19', startOfSeason = '10/16/2018', filename='model.pkl'):
@@ -198,6 +259,8 @@ def createModel(startYear=None, startMonth=None, startDay=None, endYear=None, en
     setCurrentWorkingDirectory('Data')
     allGamesDataframe = pd.read_csv('COMBINEDgamesWithInfo2016-19.csv')  # Should be commented out if needing to obtain data on different range of games
 
-    logRegModel = performLogReg(allGamesDataframe)
+    #logRegModel = performLogReg(allGamesDataframe)
 
-    saveModel(logRegModel, filename)
+    #saveModel(logRegModel, filename)
+    ANNmodel=performLogANN(allGamesDataframe)
+    saveModel2(ANNmodel, filename)
